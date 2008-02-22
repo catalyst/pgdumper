@@ -1,0 +1,17 @@
+Source: pgdumper
+Section: admin
+Priority: optional
+Maintainer: Nigel McNie <nigel@catalyst.net.nz>
+Build-Depends: debhelper (>=5)
+Standards-Version: 3.7.3
+Homepage: http://wiki.wgtn.cat-it.co.nz/wiki/Pgdumper
+Vcs-Git: git+ssh://git.catalyst.net.nz/git/public/pgdumper.git
+Vcs-Browser: http://git.catalyst.net.nz/gw?p=pgdumper.git;a=summary
+
+Package: pgdumper
+Architecture: all
+Depends: ${misc:Depends}, postgresql-client-common, mailx
+Description: Dumps all databases for a postgres installation to disk
+ Installs a script that can dump all postgres databases to disk in preparation
+ for them to be backed up. Also installs a cronjob to run this script nightly.
+ Configuration can be controlled through /etc/default/pgdumper.

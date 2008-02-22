@@ -1,0 +1,5 @@
+pgdumper (0.1.0-1) unstable; urgency=low
+
+  * Debian packaged release.
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 22 Feb 2008 09:59:06 +1300

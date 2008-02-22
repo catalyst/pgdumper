@@ -1,25 +1,18 @@
 #!/bin/sh
 #
-# This script will back up all databases found in any cluster on the (v)server
-# it is running on.
+# Dumps all databases for a postgres installation to disk, in preparation for
+# them to be backed up.
 #
-# To use this script:
+# Author: Peter Bulmer <peterb@catalyst.net.nz>
 #
-# 1) Create a directory in your backup directory (/var/backups etc.) owned by
-#    postgres (e.g. /var/backups/pg)
-# 2) Configure the variables below to suit your needs
-# 3) Create a cron job to run this script. For example, in /etc/cron.d/pgbackup:
-#
-#   0 1 * * * postgres /usr/local/bin/pgbackup.sh
-#
+set -e
 
-# Who to annoy
-ANNOY=moodlehost@catalyst.net.nz
+# Get defaults for ANNOY and BACKUPSSTOREDFOR
+. /etc/pgdumper.conf
+
 # Where to put backups. They will be placed in a subdirectory of this grouped
 # by cluster. This directory must be owned by the postgres user!
 BACKUPDIR=/var/backups/pg
-# Keep backups for this many days
-BACKUPSSTOREDFOR=10
 
 # function to execute something, or die and mail if it fails
 function run_or_die() {

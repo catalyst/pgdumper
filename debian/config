@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Decide how important it is for the user to see this message
+PRIORITY=high
+
+db_input $PRIORITY pgdumper/annoy || true
+db_input $PRIORITY pgdumper/backupsstoredfor || true
+db_input $PRIORITY pgdumper/cronfrequency || true
+db_go

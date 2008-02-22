@@ -1,0 +1,21 @@
+Template: pgdumper/annoy
+Type: string
+Default: sysadmins@catalyst.net.nz
+Description: Send e-mail to:
+ Who to annoy with messages from the script. Please make sure this is going to
+ somewhere useful - sysadmins@catalyst is probably not specific enough!
+
+Template: pgdumper/backupsstoredfor
+Type: string
+Default: 10
+Description: Days backups are stored for:
+ How many days backups should be stored for before being deleted. Remember that
+ this program is only for dumping the databases ready for real backing up to
+ take place, so you don't need to store many days of backups here.
+
+Template: pgdumper/cronfrequency
+Type: string
+Default: * 1 * * *
+Description: Cron frequency:
+ How often should the cron job be run that does the dumping?
+ m h dom mon dow

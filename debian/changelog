@@ -1,3 +1,10 @@
+pgdumper (0.1.1-1) unstable; urgency=low
+
+  * Install a far more sensible default for the database cronjob time - 1am
+    rather than every minute in 1am.
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Sun, 24 Feb 2008 13:16:45 +1300
+
 pgdumper (0.1.0-1) unstable; urgency=low
 
   * Debian packaged release.

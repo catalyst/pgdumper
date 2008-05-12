@@ -10,7 +10,7 @@ Vcs-Browser: http://git.catalyst.net.nz/gw?p=pgdumper.git;a=summary
 
 Package: pgdumper
 Architecture: all
-Depends: ${misc:Depends}, postgresql-client-common, mailx
+Depends: ${misc:Depends}, postgresql-client-common, postgresql-common, mailx
 Description: Dumps all databases for a postgres installation to disk
  Installs a script that can dump all postgres databases to disk in preparation
  for them to be backed up. Also installs a cronjob to run this script nightly.

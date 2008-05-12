@@ -1,3 +1,9 @@
+pgdumper (0.1.1-2) unstable; urgency=low
+
+  * Depend on postgresql-common for pg_lsclusters.
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Mon, 12 May 2008 13:40:12 +1200
+
 pgdumper (0.1.1-1) unstable; urgency=low
 
   * Install a far more sensible default for the database cronjob time - 1am

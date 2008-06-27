@@ -15,7 +15,7 @@ set -e
 BACKUPDIR=/var/backups/pg
 
 # function to execute something, or die and mail if it fails
-function run_or_die() {
+run_or_die () {
   $* 2>/tmp/pg_bak_run-$$
   if [ "$?" -ne "0" ]; then
     echo "Database dump failed!" > /tmp/dump-fail-$$
@@ -27,7 +27,7 @@ function run_or_die() {
     exit 1
   fi
   # On success, delete the file where errors would have gone.
-  rm /tmp/pg_bak_run-$$
+  rm /tmp/pg_bak_run-$$;
 }
 
 # Check the script is being run as postgres

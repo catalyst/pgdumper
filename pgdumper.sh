@@ -57,7 +57,7 @@ for PGCLUSTER in ` pg_lsclusters --no-header |grep online | cut -d \  --fields=1
     # dump all the databases, and compress it
     for DB in ${DBLIST}; do
         DATENOW=`date +%Y%m%d-%H%M%S`
-        run_or_die /usr/bin/pg_dump --cluster ${PGCLUSTER} -Fc ${DB} > $BACKUPDIR/pg-${PGCLUSTER_DIR}/pg-${DATENOW}-${DB}.pgdump
+        run_or_die /usr/bin/pg_dump --cluster ${PGCLUSTER} -Fc ${DB} > $BACKUPDIR/pg-${PGCLUSTER_DIR}/pg-${DB}-${DATENOW}.pgdump
     done
 done
 

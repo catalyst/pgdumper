@@ -217,7 +217,7 @@ sub determinedumpnumber {
         my $i = 0;
         my $hanoinumber;
         foreach $hanoinumber (@hanoi) {
-            print $hanoinumber . " ";
+            print " " . $hanoinumber;
             if ($i == $index) {
                 print "*";
             }

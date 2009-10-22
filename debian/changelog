@@ -1,3 +1,9 @@
+pgdumper (0.2.1-2) unstable; urgency=low
+
+  * fix misleading log output, new comments in cron entry
+
+ -- Peter Bulmer <peter.bulmer@catalyst.net.nz>  Fri, 23 Oct 2009 12:33:50 +1300
+
 pgdumper (0.2.1-1) unstable; urgency=low
 
   * Change to perl pgdumper

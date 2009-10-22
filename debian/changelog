@@ -1,3 +1,9 @@
+pgdumper (0.1.2-1) unstable; urgency=low
+
+  * Change to perl pgdumper
+
+ -- Peter Bulmer <peter.bulmer@catalyst.net.nz>  Thu, 22 Oct 2009 15:17:07 +1300
+
 pgdumper (0.1.1-2) unstable; urgency=low
 
   * Depend on postgresql-common for pg_lsclusters.

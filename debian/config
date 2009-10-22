@@ -7,6 +7,5 @@
 PRIORITY=high
 
 db_input $PRIORITY pgdumper/annoy || true
-db_input $PRIORITY pgdumper/backupsstoredfor || true
-db_input $PRIORITY pgdumper/cronfrequency || true
+db_input $PRIORITY pgdumper/backupcopies || true
 db_go

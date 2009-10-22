@@ -19,8 +19,7 @@ set -e
 
 case "$1" in
     remove|deconfigure)
-        rm -f /etc/pgdumper.conf
-        rm -f /etc/cron.d/pgdumper
+        rm -f /etc/pgdumperconf.pl
     ;;
     upgrade)
     ;;

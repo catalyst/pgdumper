@@ -10,20 +10,18 @@ clean:
 	dh_testdir
 	dh_testroot
 	dh_clean 
-	rm -f pgdumper
 
 binary:
-	cp pgdumper.sh pgdumper
-	chmod +x pgdumper
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs 
 	dh_installdocs
 	dh_installdebconf
 	dh_installman pgdumper.8
-	dh_compress 
+	dh_installcron
+	dh_installlogrotate
+	dh_compress
 	dh_fixperms
-	
 	dh_installdeb
 	
 	dh_installdirs
@@ -33,6 +31,5 @@ binary:
 	dh_md5sums
 	
 	dh_builddeb
-	rm -f pgdumper
 
 .PHONY: build clean binary

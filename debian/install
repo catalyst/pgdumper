@@ -1,1 +1,1 @@
-pgdumper usr/bin/
+pgdumper.pl usr/bin/

@@ -1,4 +1,4 @@
-pgdumper (0.1.2-1) unstable; urgency=low
+pgdumper (0.2.1-1) unstable; urgency=low
 
   * Change to perl pgdumper
 

@@ -25,6 +25,8 @@ my $pgversion;
 
 my $backupinterval = 86400; #86400 Seconds = 24 hours
 
+push @skipdb, 'template0';
+
 # Which dump should be overwritten:
 my $hanoinumber = determinedumpnumber($backupcopies, $backupinterval, %debug);
 
@@ -98,6 +100,7 @@ sub pgdump_cluster {
     $debug{'showcomment'} && print "dumping $dbcount databases\n";
     my $first = 1;
     my ($dumpproblem, $overalldumpproblems) = (0,0);
+    DB:
     foreach $dbname (@databases) {
         $overalldumpproblems ||= $dumpproblem;
         if (!$first) {
@@ -108,9 +111,11 @@ sub pgdump_cluster {
         if ($debug{'showcomment'}) {
             print $dbname . "\n";
         }
-        if ($dbname eq 'template0') {
-            $debug{'showcomment'} && print "Skipping'\n";
-            next();
+        foreach my $skip (@skipdb) {
+            if ($dbname eq $skip) {
+                $debug{'showcomment'} && print "Skipping\n";
+                next DB;
+            }
         }
         ($seconds, $minutes, $hours, $dom, $month, $year, @timearray) = localtime();
         $dbdumptime = sprintf "%4d-%02d-%02d-%02d%02d%02d", $year + 1900, $month + 1, $dom, $hours, $minutes, $seconds;

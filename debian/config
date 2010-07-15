@@ -8,4 +8,5 @@ PRIORITY=high
 
 db_input $PRIORITY pgdumper/annoy || true
 db_input $PRIORITY pgdumper/backupcopies || true
+db_input $PRIORITY pgdumper/skipdb || true
 db_go

@@ -16,3 +16,13 @@ Description: Number of backup copies kept.
  take place (eg to tape or other long-term storage).
  Keeping more than one copy means you're less likely to need to go to long term
  storage to retreive a backup.
+
+Template: pgdumper/skipdb
+Type: string
+Description: Databases to skip
+ A space-separated list of databases that should not be backed up by this
+ script. Note that template0 is always skipped.
+ .
+ Eg:
+ .
+ postgres template1

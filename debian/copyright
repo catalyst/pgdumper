@@ -6,7 +6,7 @@ http://git.catalyst.net.nz/gw?p=pgdumper.git;a=summary
 
 Upstream Author: Peter Bulmer <peterb@catalyst.net.nz>
 
-Copyright: (C) 2007-2008 Catalyst IT Ltd http://catalyst.net.nz
+Copyright: (C) 2007-2010 Catalyst IT Ltd http://catalyst.net.nz
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,5 +25,5 @@ You are free to distribute this software under the terms of the GNU General
 Public License. On Debian systems, the complete text of the GNU General
 Public License can be found in /usr/share/common-licenses/GPL-3 file.
 
-The Debian packaging is (C) 2008, Catalyst IT <enquiries@catalyst.net.nz>
+The Debian packaging is (C) 2010, Catalyst IT <enquiries@catalyst.net.nz>
 and is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

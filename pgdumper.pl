@@ -215,7 +215,7 @@ sub determinedumpnumber {
     my $tzoffset = tz_local_offset();
 
     # (Rounded off to the nearest int):
-    $intervalssinceepoch = sprintf "%.0f", ((time() - $tzoffset)/$backupinterval);
+    $intervalssinceepoch = sprintf "%.0f", ((time() + $tzoffset)/$backupinterval);
     my $index = $intervalssinceepoch % $arraylength;
     if ($debug{'level'} != 0) {
         # Log the whole array to show where we're up to

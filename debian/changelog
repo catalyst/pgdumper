@@ -1,3 +1,9 @@
+pgdumper (0.2.1-4) unstable; urgency=low
+
+  * fix timezone offset issue
+
+ -- Peter Bulmer <peter.bulmer@catalyst.net.nz>  Fri, 25 Feb 2011 13:54:38 +1300
+
 pgdumper (0.2.1-3) unstable; urgency=low
 
   * Non-maintainer upload.

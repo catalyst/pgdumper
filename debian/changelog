@@ -1,3 +1,9 @@
+pgdumper (0.2.2-1) unstable; urgency=low
+
+  * check for slave db clusters and don't dump them 
+
+ -- Richard Hector <richard@topaz.wgtn.cat-it.co.nz>  Fri, 09 Dec 2011 11:20:22 +1300
+
 pgdumper (0.2.1-4) unstable; urgency=low
 
   * fix timezone offset issue

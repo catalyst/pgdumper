@@ -6,6 +6,7 @@ use Data::Dumper;
 use Time::Zone;
 use lib '/usr/share/postgresql-common';
 use PgCommon;
+use DBI;
 use Getopt::Long;
 use Sysadm::Install qw(tap);
 
@@ -80,7 +81,11 @@ sub pgdump_cluster {
         print "Error - could not dump $pgversion $clustername - cluster not running\n";
         return 1;
     }
-    # TODO - Test connect - check that cluster is not starting up, if it is, print warning to stdout and give sensible error return value;
+
+    # don't dump on slave
+    unless (db_check_master($pgversion, $clustername)) {
+        return 0; # this is an ok situation, not an error
+    }
 
     my ($seconds, $minutes, $hours, $dom, $month, $year, @timearray) = localtime();
     my $clusterdumptime = sprintf "%4d-%02d-%02d-%02d%02d%02d", $year + 1900, $month + 1, $dom, $hours, $minutes, $seconds;
@@ -233,3 +238,30 @@ sub determinedumpnumber {
     return $hanoi[$index];
 }
 
+sub db_check_master {
+    my ($version, $cluster) = @_;
+    my $db = 'postgres';
+    my %info = cluster_info($version, $cluster);
+    my $port = $info{port};
+    my $dsn = "DBI:Pg:dbname=$db;port=$port";
+
+    my $dbh = DBI->connect( $dsn, undef, undef, {PrintError=>0, RaiseError=>0} );
+    if (defined $dbh) {
+        my $ans = $dbh->selectall_arrayref("SELECT pg_is_in_recovery()");
+        if (defined $ans) {
+            return ! $ans->[0][0];
+        }
+        else {
+            # doesn't have that function, so must be old master
+            return 1;
+        }
+    }
+    else {
+        if (DBI::errstr() eq 'FATAL:  the database system is starting up') {
+            return 0;
+        }
+        else {
+            die 'DB not running';
+        }
+    }
+}

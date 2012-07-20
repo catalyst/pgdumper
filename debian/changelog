@@ -1,3 +1,9 @@
+pgdumper (0.2.2-2) unstable; urgency=low
+
+  * check for disabled db clusters and don't dump them 
+
+ -- Richard Hector <richard@topaz.wgtn.cat-it.co.nz>  Fri, 20 Jul 2012 16:08:48 +1200
+
 pgdumper (0.2.2-1) unstable; urgency=low
 
   * check for slave db clusters and don't dump them 

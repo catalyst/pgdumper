@@ -5,7 +5,7 @@ use warnings;
 use Data::Dumper;
 use Time::Zone;
 use lib '/usr/share/postgresql-common';
-use PgCommon;
+use PgCommon qw/get_versions get_version_clusters cluster_info get_cluster_databases get_cluster_start_conf/;
 use DBI;
 use Getopt::Long;
 use Sysadm::Install qw(tap);
@@ -55,7 +55,7 @@ my @clusters;
 my $cluster;
 $debug{'showcomment'} && print "============\n";
 foreach $pgversion (sort (get_versions())) {
-    @clusters = get_version_clusters $pgversion;
+    @clusters = grep {get_cluster_start_conf($pgversion, $_) ne 'disabled'} get_version_clusters $pgversion;
     $debug{'showcomment'} && print "Dumping clusters in version $pgversion\n";
 
     foreach $cluster (sort @clusters) {

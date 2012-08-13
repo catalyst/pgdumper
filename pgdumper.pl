@@ -5,7 +5,7 @@ use warnings;
 use Data::Dumper;
 use Time::Zone;
 use lib '/usr/share/postgresql-common';
-use PgCommon qw/get_versions get_version_clusters cluster_info get_cluster_databases get_cluster_start_conf/;
+use PgCommon;
 use DBI;
 use Getopt::Long;
 use Sysadm::Install qw(tap);

@@ -55,7 +55,7 @@ my @clusters;
 my $cluster;
 $debug{'showcomment'} && print "============\n";
 foreach $pgversion (sort (get_versions())) {
-    @clusters = grep {get_cluster_start_conf($pgversion, $_) ne 'disabled'} get_version_clusters $pgversion;
+    @clusters = grep {get_cluster_start_conf($pgversion, (local $_ = $_)) ne 'disabled'} get_version_clusters $pgversion;
     $debug{'showcomment'} && print "Dumping clusters in version $pgversion\n";
 
     foreach $cluster (sort @clusters) {

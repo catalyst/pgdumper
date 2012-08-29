@@ -1,3 +1,9 @@
+pgdumper (0.2.2-3) unstable; urgency=low
+
+  * localise $_ in code to skip disabled clusters 
+
+ -- Richard Hector <richard@catalyst.net.nz>  Thu, 30 Aug 2012 11:36:07 +1200
+
 pgdumper (0.2.2-2.1) unstable; urgency=low
 
   * Non-maintainer upload.

@@ -9,6 +9,8 @@ use PgCommon;
 use DBI;
 use Getopt::Long;
 use Sysadm::Install qw(tap);
+use Mail::Sendmail;
+use Net::Domain qw(hostfqdn);
 
 our %debug = (
     'showcomment' => 1,
@@ -26,24 +28,40 @@ my $pgversion;
 
 my $backupinterval = 86400; #86400 Seconds = 24 hours
 
+my $from_address = getlogin . "@" . hostfqdn;
+
 push @skipdb, 'template0';
 
 # Which dump should be overwritten:
 my $hanoinumber = determinedumpnumber($backupcopies, $backupinterval, %debug);
 
 # Check that we're running as the postgres user:
-my $whoami = `whoami`;
+my $whoami = getpwuid($<);
 chomp($whoami);
 if ($whoami ne 'postgres') {
-    print "Error - not running as postgres\n";
-    `echo 'Problem(s) were encountered while trying to perform pgdumps' | mail -s "PROBLEM running pgdumps" $annoy`;
+    my $error_msg = "Error - not running as postgres";
+    print "$error_msg\n";
+    my %mail = (
+        To      => $annoy,
+        From    => $from_address,
+        Subject => "PROBLEM running pgdumps",
+        Message => "$error_msg\n",
+    );
+    sendmail(%mail) or warn $Mail::Sendmail::error;
     exit(1);
 }
 
 # Check that /var/backups/pg/ exists and is writeable:
 if (! -w '/var/backups/pg/') {
-    print "Error - dump directory is not writeable - giving up\n";
-    `echo 'Problem(s) were encountered while trying to perform pgdumps' | mail -s "PROBLEM running pgdumps" $annoy`;
+    my $error_msg = "Error - dump directory is not writeable - giving up";
+    print "$error_msg\n";
+    my %mail = (
+        To      => $annoy,
+        From    => $from_address,
+        Subject => "PROBLEM running pgdumps",
+        Message => "$error_msg\n",
+    );
+    sendmail(%mail) or warn $Mail::Sendmail::error;
     exit(1);
 }
 
@@ -64,8 +82,15 @@ foreach $pgversion (sort (get_versions())) {
         $overallproblemreport ||= $problemreport;
     }
     if ($overallproblemreport) {
-        print "Problem(s) encountered\n";
-        `echo 'Problem(s) were encountered while trying to perform pgdumps' | mail -s "PROBLEM running pgdumps" $annoy`
+        my $error_msg = "Problem(s) were encountered while trying to perform pgdumps - see log file\n";
+        print $error_msg;
+        my %mail = (
+            To      => $annoy,
+            From    => $from_address,
+            Subject => "PROBLEM running pgdumps",
+            Message => "$error_msg\n",
+        );
+        sendmail(%mail) or warn $Mail::Sendmail::error;
     } else {
         if ($debug{'showcomment'}) {
             print "Overall success reported\n";
@@ -261,7 +286,17 @@ sub db_check_master {
             return 0;
         }
         else {
-            die 'DB not running';
+            my $error_msg = "DB $version $cluster not running\n";
+            print $error_msg;
+            my %mail = (
+                To      => $annoy,
+                From    => $from_address,
+                Subject => "PROBLEM running pgdumps",
+                Message => "$error_msg\n",
+            );
+            sendmail(%mail) or warn $Mail::Sendmail::error;
+            exit 1;
         }
     }
 }
+

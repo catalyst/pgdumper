@@ -1,3 +1,9 @@
+pgdumper (0.2.3) unstable; urgency=low
+
+  * improve email error messages, and use Mail::Sendmail instead of mailx 
+
+ -- Richard Hector <richard@catalyst.net.nz>  Mon, 19 Aug 2013 16:55:22 +1200
+
 pgdumper (0.2.2-3) unstable; urgency=low
 
   * localise $_ in code to skip disabled clusters 

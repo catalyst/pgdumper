@@ -28,7 +28,7 @@ my $pgversion;
 
 my $backupinterval = 86400; #86400 Seconds = 24 hours
 
-my $from_address = getlogin . "@" . hostfqdn;
+my $from_address = getpwuid($<) . "@" . hostfqdn;
 
 push @skipdb, 'template0';
 

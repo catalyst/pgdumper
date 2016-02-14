@@ -30,6 +30,6 @@ binary:
 	dh_gencontrol
 	dh_md5sums
 	
-	dh_builddeb
+	dh_builddeb -- -Zgzip
 
 .PHONY: build clean binary

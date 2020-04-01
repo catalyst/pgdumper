@@ -1,3 +1,9 @@
+pgdumper (0.2.6) unstable; urgency=low
+
+  * Better examples in stock cron file around what type of server will dump
+
+ -- Peter Bulmer <peterb@saltpeter.wgtn.cat-it.co.nz>  Wed, 01 Apr 2020 23:58:59 +1300
+
 pgdumper (0.2.5) unstable; urgency=low
 
   * New options to control dump/don't dump on primary/replica servers

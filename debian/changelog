@@ -1,3 +1,9 @@
+pgdumper (0.2.5) unstable; urgency=low
+
+  * New options to control dump/don't dump on primary/replica servers
+
+ -- Peter Bulmer <peterb@saltpeter.wgtn.cat-it.co.nz>  Wed, 01 Apr 2020 23:36:42 +1300
+
 pgdumper (0.2.4) unstable; urgency=low
 
   * getlogin doesn't work from cron.  Replace with getpwuid invocation 

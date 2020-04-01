@@ -12,6 +12,27 @@ use Sysadm::Install qw(tap);
 use Mail::Sendmail;
 use Net::Domain qw(hostfqdn);
 
+my $dumponprimary = 1; # By default dump if we are primary.
+my $dumponreplica = 0; # By default don't dump if we are a replica.
+GetOptions('dumponprimary!' => \$dumponprimary,
+        'dumponreplica!' => \$dumponreplica);
+
+if ($dumponprimary) {
+    print("Will dump databases if on primary server\n");
+} else {
+    print("Will NOT dump databases if on primary server\n");
+}
+if ($dumponreplica) {
+    print("Will dump databases if on replica server\n");
+} else {
+    print("Will NOT dump databases if on replica server\n");
+}
+
+if (!$dumponprimary && !$dumponreplica) {
+    print("Invalid option configuration - no dumps configured\n");
+    exit(1);
+}
+
 our %debug = (
     'showcomment' => 1,
     'showcommand' => 0,
@@ -108,7 +129,14 @@ sub pgdump_cluster {
     }
 
     # don't dump on slave
-    unless (db_check_master($pgversion, $clustername)) {
+    my $primaryserver = db_check_master($pgversion, $clustername);
+    if ($primaryserver && !$dumponprimary) {
+        # This is a primary server, and options requested to not dump if primary server.
+        return 0; # this is an ok situation, not an error
+    }
+
+    if (!$primaryserver && !$dumponreplica) {
+        # This is a replica server, and options requested to not dump if replica server.
         return 0; # this is an ok situation, not an error
     }
 
@@ -151,10 +179,16 @@ sub pgdump_cluster {
         $dbdumptime = sprintf "%4d-%02d-%02d-%02d%02d%02d", $year + 1900, $month + 1, $dom, $hours, $minutes, $seconds;
         $dbfilename = "pg-$dbname-$dbdumptime.pgdump";
         $dbdumppath = "$hanoidumpdir/$dbfilename"; 
+
+        #If replica server, pause replication updates before dump; Can't lock tables on replica, so need to pause replication to get a consistent snapshot.
+        !$primaryserver && attempt("Pausing replication") && db_pause_replication($pgversion, $clustername);
         $dumpproblem = attempt ("Dumping to hanoi dump dir", ("/usr/bin/pg_dump", "--cluster", "$pgversion/$clustername", "--format=custom", "--file", "$dbdumppath", "$dbname"));
         my @cmd = ("/usr/bin/find", "$currentdir", "-regex", ".*pg-$dbname-.*\.pgdump", "-print", "-delete"); 
         $dumpproblem ||= attempt ("Deleting old 'current' pgdump from currentdir",  @cmd );
         $dumpproblem ||= attempt ("Hard linking new dump into current dir", ("/bin/ln", $dbdumppath, "$currentdir/$dbfilename"));
+        # If replica server, resume replication after dump, and give a short while to catch up.
+        !$primaryserver && attempt("Resuming replication") && db_resume_replication($pgversion, $clustername);
+        !$primaryserver && sleep(10);
     }
 
     if ($overalldumpproblems) {
@@ -296,6 +330,45 @@ sub db_check_master {
             );
             sendmail(%mail) or warn $Mail::Sendmail::error;
             exit 1;
+        }
+    }
+}
+
+sub db_pause_replication {
+    my ($version, $cluster) = @_;
+    my $db = 'postgres';
+    my %info = cluster_info($version, $cluster);
+    my $port = $info{port};
+    my $dsn = "DBI:Pg:dbname=$db;port=$port";
+
+    my $dbh = DBI->connect( $dsn, undef, undef, {PrintError=>0, RaiseError=>0} );
+    if (defined $dbh) {
+        my $ans = $dbh->selectall_arrayref("select pg_xlog_replay_pause()");
+        if (defined $ans) {
+            return ! $ans->[0][0];
+        }
+        else {
+            # doesn't have that function, so must be old master
+            return 1;
+        }
+    }
+}
+sub db_resume_replication {
+    my ($version, $cluster) = @_;
+    my $db = 'postgres';
+    my %info = cluster_info($version, $cluster);
+    my $port = $info{port};
+    my $dsn = "DBI:Pg:dbname=$db;port=$port";
+
+    my $dbh = DBI->connect( $dsn, undef, undef, {PrintError=>0, RaiseError=>0} );
+    if (defined $dbh) {
+        my $ans = $dbh->selectall_arrayref("select pg_xlog_replay_resume()");
+        if (defined $ans) {
+            return ! $ans->[0][0];
+        }
+        else {
+            # doesn't have that function, so must be old master
+            return 1;
         }
     }
 }

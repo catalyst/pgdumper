@@ -180,15 +180,10 @@ sub pgdump_cluster {
         $dbfilename = "pg-$dbname-$dbdumptime.pgdump";
         $dbdumppath = "$hanoidumpdir/$dbfilename"; 
 
-        #If replica server, pause replication updates before dump; Can't lock tables on replica, so need to pause replication to get a consistent snapshot.
-        !$primaryserver && attempt("Pausing replication") && db_pause_replication($pgversion, $clustername);
         $dumpproblem = attempt ("Dumping to hanoi dump dir", ("/usr/bin/pg_dump", "--cluster", "$pgversion/$clustername", "--format=custom", "--file", "$dbdumppath", "$dbname"));
         my @cmd = ("/usr/bin/find", "$currentdir", "-regex", ".*pg-$dbname-.*\.pgdump", "-print", "-delete"); 
         $dumpproblem ||= attempt ("Deleting old 'current' pgdump from currentdir",  @cmd );
         $dumpproblem ||= attempt ("Hard linking new dump into current dir", ("/bin/ln", $dbdumppath, "$currentdir/$dbfilename"));
-        # If replica server, resume replication after dump, and give a short while to catch up.
-        !$primaryserver && attempt("Resuming replication") && db_resume_replication($pgversion, $clustername);
-        !$primaryserver && sleep(10);
     }
 
     if ($overalldumpproblems) {
@@ -330,45 +325,6 @@ sub db_check_master {
             );
             sendmail(%mail) or warn $Mail::Sendmail::error;
             exit 1;
-        }
-    }
-}
-
-sub db_pause_replication {
-    my ($version, $cluster) = @_;
-    my $db = 'postgres';
-    my %info = cluster_info($version, $cluster);
-    my $port = $info{port};
-    my $dsn = "DBI:Pg:dbname=$db;port=$port";
-
-    my $dbh = DBI->connect( $dsn, undef, undef, {PrintError=>0, RaiseError=>0} );
-    if (defined $dbh) {
-        my $ans = $dbh->selectall_arrayref("select pg_xlog_replay_pause()");
-        if (defined $ans) {
-            return ! $ans->[0][0];
-        }
-        else {
-            # doesn't have that function, so must be old master
-            return 1;
-        }
-    }
-}
-sub db_resume_replication {
-    my ($version, $cluster) = @_;
-    my $db = 'postgres';
-    my %info = cluster_info($version, $cluster);
-    my $port = $info{port};
-    my $dsn = "DBI:Pg:dbname=$db;port=$port";
-
-    my $dbh = DBI->connect( $dsn, undef, undef, {PrintError=>0, RaiseError=>0} );
-    if (defined $dbh) {
-        my $ans = $dbh->selectall_arrayref("select pg_xlog_replay_resume()");
-        if (defined $ans) {
-            return ! $ans->[0][0];
-        }
-        else {
-            # doesn't have that function, so must be old master
-            return 1;
         }
     }
 }

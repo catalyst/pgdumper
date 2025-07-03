@@ -11,6 +11,7 @@ use Getopt::Long;
 use Sysadm::Install qw(tap);
 use Mail::Sendmail;
 use Net::Domain qw(hostfqdn);
+use File::Touch;
 
 my $dumponprimary = 1; # By default dump if we are primary.
 my $dumponreplica = 0; # By default don't dump if we are a replica.
@@ -117,6 +118,11 @@ foreach $pgversion (sort (get_versions())) {
             print "Overall success reported\n";
         }
     }
+}
+if (!$overallproblemreport) {
+    # Touch a path on the filesystem to indicate the last time the dump run was successful.
+    my @files = ($backupdir . "/pgdumper-lastsuccess");
+    touch(@files);
 }
 exit($overallproblemreport);
 

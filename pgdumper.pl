@@ -138,11 +138,13 @@ sub pgdump_cluster {
     my $primaryserver = db_check_master($pgversion, $clustername);
     if ($primaryserver && !$dumponprimary) {
         # This is a primary server, and options requested to not dump if primary server.
+        $debug{'showcomment'} && print "Primary server, and options requsted not to dump from primary; Not dumping.\n";
         return 0; # this is an ok situation, not an error
     }
 
     if (!$primaryserver && !$dumponreplica) {
         # This is a replica server, and options requested to not dump if replica server.
+        $debug{'showcomment'} && print "Replica server, and options requsted not to dump from replica; Not dumping.\n";
         return 0; # this is an ok situation, not an error
     }
 
@@ -207,9 +209,11 @@ exit;
 
 
 sub attempt {
+    my ($seconds, $minutes, $hours, $dom, $month, $year, @timearray) = localtime();
+    my $timestr = sprintf "%4d-%02d-%02d-%02d%02d%02d", $year + 1900, $month + 1, $dom, $hours, $minutes, $seconds;
     my ($comment, @cmd) = @_;
     if ($debug{'showcomment'}) {
-        print $comment . "\n";
+        print $timestr . " " . $comment . "\n";
     }
 
     my ($stdout, $stderr, $result) = tap @cmd;

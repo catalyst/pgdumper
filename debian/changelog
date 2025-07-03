@@ -1,3 +1,10 @@
+pgdumper (0.2.8) unstable; urgency=low
+
+  * recognise extra dependancy
+  * add timestamps to some logging
+
+ -- Peter Bulmer <peter.bulmer@catalyst.net.nz>  Thu, 03 Jul 2025 17:29:13 +1200
+
 pgdumper (0.2.7) unstable; urgency=low
 
   * add lastsuccess filesystem indicator.

@@ -1,3 +1,9 @@
+pgdumper (0.2.7) unstable; urgency=low
+
+  * add lastsuccess filesystem indicator.
+
+ -- Peter Bulmer <peterb@peterb.co.nz>  Thu, 03 Jul 2025 15:55:38 +1200
+
 pgdumper (0.2.6) unstable; urgency=low
 
   * Better examples in stock cron file around what type of server will dump
